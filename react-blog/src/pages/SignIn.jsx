@@ -53,8 +53,8 @@ export default function SignIn() {
         return;
       }
 
-      
-      localStorage.setItem('accessToken', data.accessToken || data.token);
+      localStorage.setItem('token', data.accessToken || data.token);
+      localStorage.setItem('user', JSON.stringify(data));
       navigate('/', { replace: true });
     } catch (err) {
       

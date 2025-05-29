@@ -36,6 +36,7 @@ export default function Layout() {
       <List>
         <ListItem button onClick={() => navigate('/')}>Home</ListItem>
         <ListItem button onClick={() => navigate('/users')}>Users</ListItem>
+        <ListItem button onClick={() => navigate('/Profile')}>Profile</ListItem>
       </List>
     </Box>
   );

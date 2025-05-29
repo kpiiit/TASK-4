@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 
 
 export default function UserProfile() {
-  const { id } = useParams();                    // from /users/:id
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -19,10 +19,10 @@ export default function UserProfile() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
         setUser(data);
       } catch (err) {
         console.error('Failed to fetch users:', err);
+        setNotFound(true); // Mark as not found if fetch fails
       }
     }
 
@@ -30,25 +30,26 @@ export default function UserProfile() {
   }, [id]);
 
   if (notFound) {
-    // Redirect back to users list or show a message
     return <Navigate to="/users" replace />;
   }
+
   if (!user) {
-    return <Typography>Loading...</Typography>;
+    return <Typography sx={{ m: 2 }}>Loading...</Typography>;
   }
 
   return (
-    <Paper sx={{ p: 3, mt: 3 }}>
-      <Typography variant="h5" gutterBottom>
-        {user.firstName} {user.lastName}
-      </Typography>
-      <Box sx={{ mt: 2 }}>
-        <Typography><strong>ID:</strong> {user.id}</Typography>
-        <Typography><strong>Phone:</strong> {user.phone}</Typography>
-        <Typography><strong>Email:</strong> {user.email}</Typography>
-        <Typography><strong>Phone:</strong> {user.phone}</Typography>
-        
-      </Box>
-    </Paper>
+    <>
+     
+      <Paper sx={{ p: 3, mt: 3, maxWidth: 600, mx: 'auto' }}>
+        <Typography variant="h5" gutterBottom>
+          {user.firstName} {user.lastName}
+        </Typography>
+        <Box sx={{ mt: 2 }}>
+          <Typography><strong>ID:</strong> {user.id}</Typography>
+          <Typography><strong>Phone:</strong> {user.phone}</Typography>
+          <Typography><strong>Email:</strong> {user.email}</Typography>
+        </Box>
+      </Paper>
+    </>
   );
 }
