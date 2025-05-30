@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
@@ -8,18 +7,7 @@ import {
   Typography,
   CircularProgress
 } from '@mui/material';
-
-async function authFetch(url, options = {}) {
-  const token = localStorage.getItem('accessToken');
-  return fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-  });
-}
+import { http } from '../api/http';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -29,21 +17,17 @@ export default function Profile() {
   useEffect(() => {
     async function loadUser() {
       try {
-        const res = await authFetch('https://dummyjson.com/user/me');
-        if (res.status === 401) {
-          
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('user');
-          return; 
-        }
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`);
-        }
-        const data = await res.json();
+        const res = await http.get('/auth/profile');
+        const data = res.data;
         setUser(data);
       } catch (err) {
-        console.error('Failed to fetch profile:', err);
-        setError('Could not load profile.');
+        if (err.response?.status === 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        } else {
+          console.error('Failed to fetch profile:', err);
+          setError('Could not load profile.');
+        }
       } finally {
         setLoading(false);
       }
@@ -52,8 +36,7 @@ export default function Profile() {
     loadUser();
   }, []);
 
-  
-  if (!localStorage.getItem('accessToken')) {
+  if (!localStorage.getItem('token')) {
     return <Navigate to="/signin" replace />;
   }
 
@@ -73,7 +56,6 @@ export default function Profile() {
     );
   }
 
-  
   return (
     <Paper sx={{ maxWidth: 600, mx: 'auto', p: 3, mt: 4 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -83,7 +65,7 @@ export default function Profile() {
           sx={{ width: 64, height: 64, mr: 2 }}
         />
         <Typography variant="h5">
-          {user.firstName} {user.lastName}
+          {user.name} 
         </Typography>
       </Box>
 

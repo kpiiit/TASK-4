@@ -19,6 +19,7 @@ export default function Layout() {
   const [open, setOpen] = useState(false);
 
   if (!isAuthenticated()) {
+    console.log(jndd)
     return <Navigate to="/signin" replace />;
   }
 

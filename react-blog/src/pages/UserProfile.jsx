@@ -1,10 +1,9 @@
-// src/pages/UserProfile.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-
+import { http } from '../api/http';
 
 export default function UserProfile() {
   const { id } = useParams();
@@ -14,15 +13,11 @@ export default function UserProfile() {
   useEffect(() => {
     async function loadUser() {
       try {
-        const response = await fetch(`https://dummyjson.com/users/${id}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const { data } = await http.get(`/users/${id}?=`);
         setUser(data);
-      } catch (err) {
+} catch (err) {
         console.error('Failed to fetch users:', err);
-        setNotFound(true); // Mark as not found if fetch fails
+        setNotFound(true); 
       }
     }
 
@@ -45,7 +40,7 @@ export default function UserProfile() {
           {user.firstName} {user.lastName}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          <Typography><strong>ID:</strong> {user.id}</Typography>
+          <Typography><strong>ID:</strong> {user._id}</Typography>
           <Typography><strong>Phone:</strong> {user.phone}</Typography>
           <Typography><strong>Email:</strong> {user.email}</Typography>
         </Box>

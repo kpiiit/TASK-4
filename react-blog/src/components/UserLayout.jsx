@@ -1,4 +1,3 @@
-// src/pages/users/UserLayout.jsx
 import React from 'react';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
 import { Box, Tabs, Tab } from '@mui/material';
