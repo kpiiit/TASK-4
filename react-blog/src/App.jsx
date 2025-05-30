@@ -6,19 +6,29 @@ import SignUp from './pages/SignUp';
 import DashboardHome from './pages/DashboardHome';
 import Users from './pages/Users';
 import UserProfile from './pages/UserProfile';
-
+import UserLayout from './components/UserLayout';
+import Details from './pages/Details';
+import Documents from './pages/Documents';
+import Permissions from './pages/Permissions';
+import Profile from './pages/Profile';
 export default function App() {
   return (
     <Routes>
-      {/* Public */}
+      {}
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
 
-      {/* Protected */}
-      <Route element={<Layout />}>
+      {}
+      <Route path="/" element={<Layout />}>
         <Route index element={<DashboardHome />} />
         <Route path="users" element={<Users />} />
-        <Route path="users/:id" element={<UserProfile />} />
+        <Route path="Profile" element={<Profile />} />
+        <Route path="users/:id" element={<UserLayout />}>
+          <Route index element={<UserProfile />} />
+          <Route path="details" element={<Details />} />
+          <Route path="documents" element={<Documents />} />
+          <Route path="permissions" element={<Permissions />} />
+        </Route>
       </Route>
 
       {/* Fallback */}

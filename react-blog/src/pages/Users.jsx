@@ -1,5 +1,3 @@
-// src/pages/Users.jsx
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,21 +6,37 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';      // <-- slash added
+import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-
-import { getUsers } from '../utils/auth';              // <-- import your helper
+import { http } from '../api/http';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // pull the latest users array on mount
-    setUsers(getUsers());
+    async function loadUsers() {
+      try {
+        const { data } = await http.get('/users');
+        setUsers(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Failed to fetch users:', err);
+        setError('Unable to load users.');
+      }
+    }
+    loadUsers();
   }, []);
+
+  if (error) {
+    return (
+      <Typography color="error" align="center" sx={{ mt: 4 }}>
+        {error}
+      </Typography>
+    );
+  }
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -34,6 +48,7 @@ export default function Users() {
           <TableHead>
             <TableRow>
               <TableCell><strong>ID</strong></TableCell>
+              <TableCell><strong>Name</strong></TableCell>
               <TableCell><strong>Email</strong></TableCell>
               <TableCell><strong>Actions</strong></TableCell>
             </TableRow>
@@ -41,19 +56,20 @@ export default function Users() {
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={4} align="center">
                   No users found.
                 </TableCell>
               </TableRow>
             ) : (
               users.map((u) => (
-                <TableRow key={u.id}>
-                  <TableCell>{u.id}</TableCell>
+                <TableRow key={u._id}>
+                  <TableCell>{u._id}</TableCell>
+                  <TableCell>{u.name}</TableCell>
                   <TableCell>{u.email}</TableCell>
                   <TableCell>
                     <Button
                       component={Link}
-                      to={`/users/${u.id}`}
+                      to={`/users/${u._id}`}
                       variant="outlined"
                       size="small"
                     >
