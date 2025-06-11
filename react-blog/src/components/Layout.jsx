@@ -19,6 +19,7 @@ export default function Layout() {
   const [open, setOpen] = useState(false);
 
   if (!isAuthenticated()) {
+    //  console.log(jndd)
     return <Navigate to="/signin" replace />;
   }
 
@@ -36,6 +37,7 @@ export default function Layout() {
       <List>
         <ListItem button onClick={() => navigate('/')}>Home</ListItem>
         <ListItem button onClick={() => navigate('/users')}>Users</ListItem>
+        <ListItem button onClick={() => navigate('/Profile')}>Profile</ListItem>
       </List>
     </Box>
   );
